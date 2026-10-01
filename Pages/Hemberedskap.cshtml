@@ -1,0 +1,87 @@
+﻿@page
+@model WebApplication1.Pages.HemberedskapModel
+
+<h1>Hemberedskap</h1>
+
+@if (Model.Meddelande != null)
+{
+    <p>@Model.Meddelande</p>
+}
+
+<form method="post" id="formular">
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <div>
+        <label asp-for="Formular.Name">Namn</label>
+        <input asp-for="Formular.Name" />
+        <span asp-validation-for="Formular.Name"></span>
+    </div>
+
+    <div>
+        <label asp-for="Formular.email">E-post</label>
+        <input asp-for="Formular.email" />
+        <span asp-validation-for="Formular.email"></span>
+        <span id="epost-fel" style="color:red"></span>
+    </div>
+
+    <p>Vad har du hemma?</p>
+    <div>
+        <input asp-for="Formular.vatten" />
+        <label asp-for="Formular.vatten">Vatten</label>
+    </div>
+    <div>
+        <input asp-for="Formular.mat" />
+        <label asp-for="Formular.mat">Mat</label>
+    </div>
+    <div>
+        <input asp-for="Formular.ficklampa" />
+        <label asp-for="Formular.ficklampa">Ficklampa</label>
+    </div>
+    <div>
+        <input asp-for="Formular.batteri_radio" />
+        <label asp-for="Formular.batteri_radio">Batteridriven radio</label>
+    </div>
+
+    <div>
+        <label asp-for="Formular.tips">Tips</label>
+        <textarea asp-for="Formular.tips" rows="4"></textarea>
+        <span id="tips-rakning">0 / 10000</span>
+        <span asp-validation-for="Formular.tips"></span>
+    </div>
+
+    <button type="submit">Skicka</button>
+</form>
+
+@section Scripts {
+    <script>
+        const formular = document.getElementById("formular");
+        const epost = document.getElementById("Formular_email");
+        const epostFel = document.getElementById("epost-fel");
+        const tips = document.getElementById("Formular_tips");
+        const rakning = document.getElementById("tips-rakning");
+
+        const epostMonster = /^[^@@\s]+@@[^@@\s]+\.[^@@\s]+$/;
+
+        function kontrolleraEpost() {
+            if (!epostMonster.test(epost.value.trim())) {
+                epostFel.textContent = "Ange en e-postadress som namn@@exempel.se";
+                return false;
+            }
+            epostFel.textContent = "";
+            return true;
+        }
+
+        epost.addEventListener("input", kontrolleraEpost);
+
+        tips.addEventListener("input", () => {
+            rakning.textContent = tips.value.length + " / 10000";
+        });
+
+        formular.addEventListener("submit", (e) => {
+            if (!kontrolleraEpost()) {
+                e.preventDefault();
+                epost.focus();
+            }
+        });
+    </script>
+}
